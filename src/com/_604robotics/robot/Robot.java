@@ -7,6 +7,10 @@
 
 package com._604robotics.robot;
 
+import com._604robotics.csim.ControllerManager;
+import com._604robotics.csim.controllers.DumbVoltageController;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,15 +28,19 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  public Robot(){
+    super(0.010);
+  }
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    ControllerManager.getInstance().registerController(new DumbVoltageController());
+
+    NetworkTableInstance.getDefault().setUpdateRate(0.010);
   }
 
   /**
@@ -45,6 +53,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    ControllerManager.getInstance().update();
   }
 
   /**

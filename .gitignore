@@ -349,6 +349,13 @@ Temporary Items
 !.vscode/extensions.json
 *.code-workspace
 
+# VS Code Specific Java Settings
+.classpath
+.project
+.settings/
+bin/
+imgui.ini
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

@@ -6,7 +6,10 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-def ROBOT_MAIN_CLASS = "com._604robotics.robot.Robot"
+wpi.maven.useFrcMavenLocalDevelopment = true
+wpi.wpilibVersion = '2020.+'
+
+def ROBOT_MAIN_CLASS = "com._604robotics.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.

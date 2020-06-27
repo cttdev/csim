@@ -1,9 +1,13 @@
 package com._604robotics.subsystemwidget.widget;
 
+import com._604robotics.subsystemwidget.data.PositionState;
 import edu.wpi.first.shuffleboard.api.data.types.NumberType;
 import edu.wpi.first.shuffleboard.api.widget.Description;
 import edu.wpi.first.shuffleboard.api.widget.ParametrizedController;
 import edu.wpi.first.shuffleboard.api.widget.SimpleAnnotatedWidget;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -13,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import java.net.URL;
 
@@ -22,7 +27,7 @@ import java.net.URL;
     summary = "Displays the robot arm position given the angle"
 )
 @ParametrizedController("ArmDisaplyWidget.fxml")
-public final class ArmDisplayWidget extends SimpleAnnotatedWidget<Number> {
+public final class ArmDisplayWidget extends SimpleAnnotatedWidget<PositionState> {
 
   @FXML
   private Pane root;
@@ -134,7 +139,10 @@ public final class ArmDisplayWidget extends SimpleAnnotatedWidget<Number> {
 
     //Listener to update rotation angle when data is changed.
     dataOrDefault.addListener((__, prev, cur) -> {
-      rotate.setAngle(cur.doubleValue());
+      Timeline timeline = new Timeline(
+              new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), rotate.getAngle())),
+              new KeyFrame(Duration.seconds(cur.getDt()), new KeyValue(rotate.angleProperty(), cur.getPosition())));
+      timeline.play();
     });
 
     //Adding everything to the pane.

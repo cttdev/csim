@@ -1,6 +1,7 @@
 package com._604robotics.subsystemwidget.widget;
 
 import com._604robotics.subsystemwidget.data.PositionState;
+import com._604robotics.subsystemwidget.data.type.PositionStateType;
 import edu.wpi.first.shuffleboard.api.data.types.NumberType;
 import edu.wpi.first.shuffleboard.api.widget.Description;
 import edu.wpi.first.shuffleboard.api.widget.ParametrizedController;
@@ -23,7 +24,7 @@ import java.net.URL;
 
 @Description(
     name = "Arm Display",
-    dataTypes = NumberType.class,
+    dataTypes = PositionStateType.class,
     summary = "Displays the robot arm position given the angle"
 )
 @ParametrizedController("ArmDisaplyWidget.fxml")

@@ -9,9 +9,8 @@ import edu.wpi.first.wpiutil.math.Pair;
 import edu.wpi.first.wpiutil.math.numbers.N1;
 import edu.wpi.first.wpiutil.math.numbers.N2;
 
-public class PositionVelocityModel extends StateSpaceModel {
+public class PositionVelocityModel extends StateSpaceModel{
     private LinearSystem<N2, N1, N1> m_system;
-
 
     public PositionVelocityModel(Subsystem.Position subsystem, LinearSystem<N2, N1, N1> system) {
         super(subsystem);
@@ -26,6 +25,7 @@ public class PositionVelocityModel extends StateSpaceModel {
         return new PositionVelocityModel(Subsystem.Position.ELEVATOR, LinearSystem.createElevatorSystem(motor, mass, drumRadius, gearing));
     }
 
+    @Override
     public void reset(){
         m_system.reset();
         m_lastTimestamp = Double.NaN;
@@ -40,19 +40,19 @@ public class PositionVelocityModel extends StateSpaceModel {
     public void calculate(double inputVoltage){
         clamp(inputVoltage, -12.0, 12.0);
 
-        double dt = 0.0;
+        m_dt = 0.0;
         if(m_enabled) {
+            var time = Timer.getFPGATimestamp();
             if (Double.isNaN(m_lastTimestamp)) {
-                m_lastTimestamp = Timer.getFPGATimestamp();
+                m_lastTimestamp = time;
             } else {
-                dt = Timer.getFPGATimestamp() - m_lastTimestamp;
-                m_lastTimestamp = Timer.getFPGATimestamp();
+                m_dt = time - m_lastTimestamp;
+                m_lastTimestamp = time;
             }
-
-            m_system.setX(m_system.calculateX(m_system.getX(), new MatBuilder<>(Nat.N1(), Nat.N1()).fill(inputVoltage), dt));
+            
+            m_system.setX(m_system.calculateX(m_system.getX(), new MatBuilder<>(Nat.N1(), Nat.N1()).fill(inputVoltage), m_dt));
         }
     }
-    
 
     @Override
     public double getPosition(){
@@ -62,5 +62,10 @@ public class PositionVelocityModel extends StateSpaceModel {
     @Override
     public double getVelocity(){
         return m_system.getX(1);
+    }
+    
+    @Override
+    public double getDt(){
+        return m_dt;
     }
 }

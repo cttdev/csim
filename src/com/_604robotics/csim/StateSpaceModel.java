@@ -1,8 +1,14 @@
 package com._604robotics.csim;
 
-public abstract class StateSpaceModel {
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+
+public abstract class StateSpaceModel implements Sendable, AutoCloseable {
     protected Subsystem m_subsystem;
     protected boolean m_enabled = false;
+
+    protected double m_dt;
 
     protected double m_lastTimestamp = Double.NaN;
 
@@ -10,7 +16,7 @@ public abstract class StateSpaceModel {
         m_subsystem = subsystem;
     }
 
-    public Subsystem getSubsystem(){
+    public Subsystem getModelSubsystem(){
         return m_subsystem;
     }
 
@@ -29,12 +35,32 @@ public abstract class StateSpaceModel {
 
     public abstract double getVelocity();
 
+    public abstract void reset();
+
+    public double getDt(){
+        return m_dt;
+    }
+
     public boolean isEnabled(){
         return m_enabled;
     }
 
     public static double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+      builder.setSmartDashboardType("PositionState");
+      builder.addDoubleProperty("position", this::getPosition, null);
+      builder.addDoubleProperty("velocity", this::getVelocity, null);
+      builder.addDoubleProperty("dt", this::getDt, null);
+    }
+
+    @Override
+    public void close(){
+        SendableRegistry.remove(this);
+        reset();
     }
 
     // Marker interface smells but, how to do compile time check

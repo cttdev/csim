@@ -1,5 +1,7 @@
 package com._604robotics.subsystemwidget;
 
+import com._604robotics.subsystemwidget.data.PositionState;
+import com._604robotics.subsystemwidget.data.type.PositionStateType;
 import edu.wpi.first.shuffleboard.api.data.DataType;
 import edu.wpi.first.shuffleboard.api.data.types.NumberType;
 import edu.wpi.first.shuffleboard.api.plugin.Description;
@@ -24,6 +26,13 @@ import java.util.Map;
 public final class CSimPlugin extends Plugin {
 
   @Override
+  public List<DataType> getDataTypes() {
+    return List.of(
+            PositionStateType.Instance
+    );
+  }
+
+  @Override
   public List<ComponentType> getComponents() {
     return List.of(
         WidgetType.forAnnotatedWidget(ArmDisplayWidget.class)
@@ -33,7 +42,7 @@ public final class CSimPlugin extends Plugin {
   @Override
   public Map<DataType, ComponentType> getDefaultComponents() {
     return Map.of(
-            NumberType.Instance, WidgetType.forAnnotatedWidget(ArmDisplayWidget.class)
+            PositionStateType.Instance, WidgetType.forAnnotatedWidget(ArmDisplayWidget.class)
     );
   }
 }

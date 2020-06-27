@@ -31,7 +31,6 @@ public class ControllerManager {
             if(handler.getEnabled()){
                 model.enable();
                 model.calculate(controller.calculate(handler.getSetpoint(), model.getPosition()));
-                System.out.println("Calculating" + model.getPosition());
             } else {
                 controller.getModel().disable();
             }

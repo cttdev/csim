@@ -8,7 +8,7 @@ public abstract class Controller {
     public Controller(StateSpaceModel model) {
         m_model = model;
     }
-
+    
     public abstract double calculate(double setpoint, double measurement);
 
     public StateSpaceModel getModel(){
